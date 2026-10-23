@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EFAC Forge - Smart Indoor Navigation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=yl2eKj0pMlCjgwPY3UT-NZvEpVNAxoIiCI6j-sqiBIdAlmvVoiEP8ZVLm5UBSlbsUVlWOoOO0K53ZM_j5DRgdtVLQFz6KC3lC4Iqb1HwcZ27A-rcroaE3cIWU8qG2kDIcYAoXB79ntFuuFyvM-5f3Sbyafy7QlOu9s9ZuzJxw0ftUNVOaTvLD3z1as6LG4l__W0L18ID3qNxRPZjaiZoXhCK1zTJ6TuKar5bRhetLnAvJU1uc0dmMpxObrv01ZzoUxV2h2Lm8J5E-OCDmIya-fK49RtIWZ63ri14dmlvc9BrWKI42Hu_wlwtAX3PcTlZ" charset="UTF-8"></script><style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --accent: #f97316;
+            --success: #10b981;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .phone-wrapper {
+            width: 100%;
+            max-width: 440px;
+            background: var(--bg);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 4px solid #334155;
+        }
+
+        /* Top Bar */
+        .top-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .brand-title h1 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .brand-title p {
+            font-size: 0.72rem;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        .status-pill {
+            background: #dcfce7;
+            color: #15803d;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #16a34a;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        /* Search Section */
+        .search-container {
+            padding: 16px 20px 8px 20px;
+        }
+
+        .custom-select-box {
+            position: relative;
+        }
+
+        .select-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-main);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            outline: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: calc(100% - 16px) center;
+        }
+
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Floor Chips */
+        .floor-scroller {
+            display: flex;
+            gap: 8px;
+            padding: 10px 20px 14px 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .floor-scroller::-webkit-scrollbar {
+            display: none;
+        }
+
+        .floor-chip {
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            color: var(--text-sub);
+            font-size: 0.8rem;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .floor-chip.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+            transform: translateY(-1px);
+        }
+
+        /* Map Canvas Card */
+        .map-wrapper {
+            padding: 0 20px 16px 20px;
+        }
+
+        .map-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1.5px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #ffffff;
+        }
+
+        /* SVG Aesthetic Styles */
+        .corridor-mesh {
+            fill: #f8fafc;
+            stroke: #e2e8f0;
+            stroke-width: 1.5;
+        }
+
+        .wall-boundary {
+            stroke: #cbd5e1;
+            stroke-width: 2;
+            stroke-dasharray: 4 4;
+        }
+
+        .room-box {
+            fill: #f1f5f9;
+            stroke: #94a3b8;
+            stroke-width: 1.5;
+            rx: 8;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .room-text {
+            font-size: 11px;
+            font-weight: 700;
+            fill: #334155;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        .room-sub {
+            font-size: 9px;
+            font-weight: 600;
+            fill: #64748b;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        .room-active {
+            fill: #dbeafe !important;
+            stroke: var(--primary) !important;
+            stroke-width: 2.5;
+            filter: drop-shadow(0 4px 8px rgba(37, 99, 235, 0.25));
+        }
+
+        .room-special {
+            stroke: var(--accent) !important;
+        }
+
+        .room-special.room-active {
+            fill: #ffedd5 !important;
+            stroke: #ea580c !important;
+            filter: drop-shadow(0 4px 8px rgba(234, 88, 12, 0.25));
+        }
+
+        .lift-container {
+            fill: #fef08a;
+            stroke: #ca8a04;
+            stroke-width: 2;
+            rx: 8;
+        }
+
+        .path-route {
+            fill: none;
+            stroke: #ef4444;
+            stroke-width: 4.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 8 6;
+            animation: flow 1s linear infinite;
+        }
+
+        @keyframes flow {
+            to { stroke-dashoffset: -14; }
+        }
+
+        /* Details Card */
+        .details-wrapper {
+            padding: 0 20px 20px 20px;
+            display: none;
+        }
+
+        .details-wrapper.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .guidance-box {
+            background: var(--card-bg);
+            border-radius: 18px;
+            border: 1.5px solid var(--border);
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .guidance-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .turn-icon {
+            width: 26px;
+            height: 26px;
+            background: #dbeafe;
+            color: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        .guidance-title {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .guidance-desc {
+            font-size: 0.92rem;
+            color: var(--text-main);
+            line-height: 1.45;
+            margin-bottom: 14px;
+            font-weight: 500;
+        }
+
+        .photo-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .door-photo {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-tag {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(6px);
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.02em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-wrapper">
+    <!-- Top Navigation Bar -->
+    <div class="top-nav">
+        <div class="brand-badge">
+            <div class="brand-logo">E</div>
+            <div class="brand-title">
+                <h1>Faculty Navigator</h1>
+                <p>EFAC Forge Live Portal</p>
+            </div>
+        </div>
+        <div class="status-pill">
+            <div class="status-dot"></div>
+            Online
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-container">
+        <div class="custom-select-box">
+            <label class="select-label" for="destinationSelect">Target Destination</label>
+            <select id="destinationSelect" onchange="handleDestination()">
+                <option value="">Choose where you want to go...</option>
+                <optgroup label="Main Corridor (Ground)">
+                    <option value="main-common-room">Common Room</option>
+                    <option value="main-it-lab">IT Lab</option>
+                    <option value="main-lecture-hall">Lecture Hall</option>
+                    <option value="main-is-dept">IS Department (Orange Door)</option>
+                    <option value="main-mech-dept">Mechanical Dept (2F Entrance)</option>
+                </optgroup>
+                <optgroup label="Mechanical Complex - 2nd Floor">
+                    <option value="mech-instructor-room">Instructor Room (2F)</option>
+                    <option value="mech-lift-2f">Elevator / Lift (2F)</option>
+                </optgroup>
+                <optgroup label="Mechanical Complex - Ground Floor">
+                    <option value="mech-basic-mfg-lab">Basic Manufacturing Lab (0F)</option>
+                    <option value="mech-ground-common">Common Room (0F)</option>
+                    <option value="mech-drawing-room">Drawing Room (0F)</option>
+                </optgroup>
+                <optgroup label="Mechanical Complex - Other Levels">
+                    <option value="mech-thermo-lab">Thermodynamics Lab (1F)</option>
+                    <option value="mech-mechanical-labs">Mechanical Labs (3F)</option>
+                    <option value="mech-lectures-room">Lectures Room (4F)</option>
+                </optgroup>
+            </select>
+        </div>
+    </div>
+
+    <!-- Floor Tabs -->
+    <div class="floor-scroller">
+        <button class="floor-chip active" id="tab-main" onclick="changeFloor('main')">Main Corridor</button>
+        <button class="floor-chip" id="tab-ground" onclick="changeFloor('ground')">Mech Ground</button>
+        <button class="floor-chip" id="tab-1st" onclick="changeFloor('1st')">Mech 1F</button>
+        <button class="floor-chip" id="tab-2nd" onclick="changeFloor('2nd')">Mech 2F</button>
+        <button class="floor-chip" id="tab-3rd" onclick="changeFloor('3rd')">Mech 3F</button>
+        <button class="floor-chip" id="tab-4th" onclick="changeFloor('4th')">Mech 4F</button>
+    </div>
+
+    <!-- Map Canvas Area -->
+    <div class="map-wrapper">
+        <div class="map-card">
+            <!-- 1. MAIN CORRIDOR -->
+            <svg id="view-main" viewBox="0 0 360 620">
+                <rect class="corridor-mesh" x="25" y="25" width="310" height="570" rx="16" />
+                
+                <!-- Mechanical Block -->
+                <rect id="room-main-mech-dept" class="room-box" x="140" y="45" width="150" height="75" />
+                <text x="215" y="80" class="room-text">Mechanical Dept</text>
+                <text x="215" y="96" class="room-sub">2F Entry Level</text>
+
+                <!-- IS Dept -->
+                <rect id="room-main-is-dept" class="room-box room-special" x="35" y="145" width="110" height="95" />
+                <text x="90" y="185" class="room-text" style="fill: #c2410c;">IS Dept</text>
+                <text x="90" y="202" class="room-sub" style="fill: #ea580c; font-weight:800;">[Orange Door]</text>
+
+                <!-- Lecture Hall -->
+                <rect id="room-main-lecture-hall" class="room-box" x="175" y="195" width="145" height="75" />
+                <text x="247" y="238" class="room-text">Lecture Hall</text>
+
+                <!-- IT Lab -->
+                <rect id="room-main-it-lab" class="room-box" x="175" y="305" width="145" height="85" />
+                <text x="247" y="352" class="room-text">IT Lab</text>
+
+                <!-- Common Room -->
+                <rect id="room-main-common-room" class="room-box" x="175" y="420" width="145" height="95" />
+                <text x="247" y="472" class="room-text">Common Room</text>
+
+                <!-- You Are Here Pin -->
+                <g transform="translate(60, 535)">
+                    <rect x="0" y="0" width="105" height="26" rx="13" fill="#10b981" />
+                    <circle cx="13" cy="13" r="5" fill="#ffffff" />
+                    <text x="58" y="17" font-size="10" font-weight="800" fill="#ffffff" text-anchor="middle">YOU ARE HERE</text>
+                </g>
+
+                <path id="route-main" class="path-route" d="" style="display:none;" />
+            </svg>
+
+            <!-- 2. MECHANICAL 2ND FLOOR -->
+            <svg id="view-2nd" viewBox="0 0 360 360" style="display:none;">
+                <rect class="corridor-mesh" x="20" y="20" width="320" height="320" rx="16" />
+                
+                <rect id="room-mech-instructor-room" class="room-box" x="40" y="60" width="130" height="180" />
+                <text x="105" y="145" class="room-text">Instructor Room</text>
+                <text x="105" y="165" class="room-sub">Staff Office</text>
+
+                <rect id="room-mech-lift-2f" class="lift-container" x="210" y="60" width="110" height="90" />
+                <text x="265" y="105" class="room-text" style="fill: #854d0e; font-size: 13px;">ELEVATOR</text>
+                <text x="265" y="123" class="room-sub" style="fill: #a16207;">To All Floors</text>
+
+                <!-- Entry Point -->
+                <g transform="translate(115, 295)">
+                    <rect x="0" y="0" width="130" height="24" rx="12" fill="#10b981" />
+                    <circle cx="12" cy="12" r="5" fill="#ffffff" />
+                    <text x="70" y="16" font-size="9" font-weight="800" fill="#ffffff" text-anchor="middle">CORRIDOR ENTRY</text>
+                </g>
+
+                <path id="route-2nd" class="path-route" d="" style="display:none;" />
+            </svg>
+
+            <!-- 3. MECHANICAL GROUND FLOOR -->
+            <svg id="view-ground" viewBox="0 0 360 400" style="display:none;">
+                <rect class="corridor-mesh" x="20" y="20" width="320" height="360" rx="16" />
+                
+                <rect class="lift-container" x="135" y="40" width="90" height="70" />
+                <text x="180" y="80" class="room-text" style="fill: #854d0e; font-size: 12px;">ELEVATOR</text>
+
+                <rect id="room-mech-basic-mfg-lab" class="room-box" x="35" y="140" width="130" height="90" />
+                <text x="100" y="180" class="room-text">Basic Mfg Lab</text>
+                <text x="100" y="198" class="room-sub">Workshop</text>
+
+                <rect id="room-mech-ground-common" class="room-box" x="135" y="250" width="100" height="75" />
+                <text x="185" y="292" class="room-text">Common</text>
+
+                <rect id="room-mech-drawing-room" class="room-box" x="35" y="250" width="85" height="75" />
+                <text x="77" y="292" class="room-text">Drawing</text>
+
+                <path id="route-ground" class="path-route" d="" style="display:none;" />
+            </svg>
+
+            <!-- 4. MECHANICAL 1ST FLOOR -->
+            <svg id="view-1st" viewBox="0 0 360 300" style="display:none;">
+                <rect class="corridor-mesh" x="20" y="20" width="320" height="260" rx="16" />
+                <rect class="lift-container" x="200" y="50" width="100" height="70" />
+                <text x="250" y="90" class="room-text" style="fill: #854d0e; font-size: 12px;">ELEVATOR</text>
+
+                <rect id="room-mech-thermo-lab" class="room-box" x="40" y="50" width="140" height="150" />
+                <text x="110" y="125" class="room-text">Thermodynamics</text>
+                <text x="110" y="145" class="room-sub">Engineering Lab</text>
+                <path id="route-1st" class="path-route" d="" style="display:none;" />
+            </svg>
+
+            <!-- 5. MECHANICAL 3RD FLOOR -->
+            <svg id="view-3rd" viewBox="0 0 360 300" style="display:none;">
+                <rect class="corridor-mesh" x="20" y="20" width="320" height="260" rx="16" />
+                <rect class="lift-container" x="200" y="50" width="100" height="70" />
+                <text x="250" y="90" class="room-text" style="fill: #854d0e; font-size: 12px;">ELEVATOR</text>
+
+                <rect id="room-mech-mechanical-labs" class="room-box" x="40" y="50" width="140" height="150" />
+                <text x="110" y="125" class="room-text">Mechanical Labs</text>
+                <text x="110" y="145" class="room-sub">Practical Units</text>
+                <path id="route-3rd" class="path-route" d="" style="display:none;" />
+            </svg>
+
+            <!-- 6. MECHANICAL 4TH FLOOR -->
+            <svg id="view-4th" viewBox="0 0 360 300" style="display:none;">
+                <rect class="corridor-mesh" x="20" y="20" width="320" height="260" rx="16" />
+                <rect class="lift-container" x="200" y="50" width="100" height="70" />
+                <text x="250" y="90" class="room-text" style="fill: #854d0e; font-size: 12px;">ELEVATOR</text>
+
+                <rect id="room-mech-lectures-room" class="room-box" x="40" y="50" width="140" height="150" />
+                <text x="110" y="125" class="room-text">Lectures Room</text>
+                <text x="110" y="145" class="room-sub">Hall 4A</text>
+                <path id="route-4th" class="path-route" d="" style="display:none;" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Direction Instructions & Door View -->
+    <div class="details-wrapper" id="detailsWrapper">
+        <div class="guidance-box">
+            <div class="guidance-header">
+                <div class="turn-icon">➔</div>
+                <div class="guidance-title">Walking Guidance</div>
+            </div>
+            <p class="guidance-desc" id="guidanceText"></p>
+            <div class="photo-container">
+                <img id="guidanceImage" class="door-photo" src="" alt="Doorway View">
+                <div class="photo-tag">Visual Verification</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var navData = {
+        "main-common-room": {
+            view: "main",
+            instruction: "Located in the Main Department Corridor. Walk forward from the entrance along the corridor, and turn right into the Common Room doorway.",
+            path: "M 80 545 L 80 465 L 175 465",
+            image: "https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?w=700"
+        },
+        "main-it-lab": {
+            view: "main",
+            instruction: "Located in the Main Department Corridor. Walk along the hallway past the Common Room, then enter the IT Lab entrance on your right.",
+            path: "M 80 545 L 80 348 L 175 348",
+            image: "https://images.unsplash.com/photo-1562774053-701939374585?w=700"
+        },
+        "main-lecture-hall": {
+            view: "main",
+            instruction: "Located in the Main Department Corridor. Proceed straight past the IT Lab and turn right at the junction into the Lecture Hall.",
+            path: "M 80 545 L 80 232 L 175 232",
+            image: "https://images.unsplash.com/photo-1562774053-701939374585?w=700"
+        },
+        "main-is-dept": {
+            view: "main",
+            instruction: "Located in the Main Department Corridor. Walk straight down the hallway, turn left, and look for the distinctive orange-painted door of the IS Department.",
+            path: "M 80 545 L 80 192 L 145 192",
+            image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=700"
+        },
+        "main-mech-dept": {
+            view: "main",
+            instruction: "Walk all the way to the far end of the Main Corridor to access the Level 2 Entrance of the Mechanical Department Building.",
+            path: "M 80 545 L 80 80 L 140 80",
+            image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=700"
+        },
+        "mech-instructor-room": {
+            view: "2nd",
+            instruction: "Located inside the Mechanical Department Building (Level 2 - Entry Level). Enter from the main corridor and take the door immediately on your left.",
+            path: "M 180 295 L 180 150 L 170 150",
+            image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=700"
+        },
+        "mech-lift-2f": {
+            view: "2nd",
+            instruction: "Located inside the Mechanical Department Building (Level 2). Walk forward from the entrance and turn right to take the central elevator to access other floors.",
+            path: "M 180 295 L 180 105 L 210 105",
+            image: "https://images.unsplash.com/photo-1574958269340-fa927503f3dd?w=700"
+        },
+        "mech-basic-mfg-lab": {
+            view: "ground",
+            instruction: "Located inside the Mechanical Department Building (Ground Floor). Take the elevator down to the Ground Floor, exit, and turn left into the Basic Manufacturing Lab.",
+            path: "M 180 110 L 180 185 L 165 185",
+            image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=700"
+        },
+        "mech-ground-common": {
+            view: "ground",
+            instruction: "Located inside the Mechanical Department Building (Ground Floor). Take the elevator down to the Ground Floor and walk straight down the corridor into the Common Room.",
+            path: "M 180 110 L 180 250",
+            image: "https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?w=700"
+        },
+        "mech-drawing-room": {
+            view: "ground",
+            instruction: "Located inside the Mechanical Department Building (Ground Floor). From the elevator, proceed toward the Common Room and turn left into the Drawing Room.",
+            path: "M 180 110 L 180 285 L 120 285",
+            image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=700"
+        },
+        "mech-thermo-lab": {
+            view: "1st",
+            instruction: "Located inside the Mechanical Department Building (1st Floor). Take the elevator to the 1st Floor, exit, and enter the Thermodynamics Lab on your left.",
+            path: "M 200 85 L 180 85 L 180 125",
+            image: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=700"
+        },
+        "mech-mechanical-labs": {
+            view: "3rd",
+            instruction: "Located inside the Mechanical Department Building (3rd Floor). Take the elevator up to the 3rd Floor, exit, and enter the Mechanical Labs situated on your left.",
+            path: "M 200 85 L 180 85 L 180 125",
+            image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=700"
+        },
+        "mech-lectures-room": {
+            view: "4th",
+            instruction: "Located inside the Mechanical Department Building (4th Floor). Take the elevator up to the 4th Floor, exit, and enter the Lectures Room directly on your left.",
+            path: "M 200 85 L 180 85 L 180 125",
+            image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=700"
+        }
+    };
+
+    var floorList = ["main", "ground", "1st", "2nd", "3rd", "4th"];
+
+    function changeFloor(fName) {
+        for (var i = 0; i < floorList.length; i++) {
+            var f = floorList[i];
+            var svg = document.getElementById("view-" + f);
+            var tab = document.getElementById("tab-" + f);
+            if (svg) svg.style.display = (f === fName) ? "block" : "none";
+            if (tab) {
+                if (f === fName) tab.classList.add("active");
+                else tab.classList.remove("active");
+            }
+        }
+    }
+
+    function handleDestination() {
+        var sel = document.getElementById("destinationSelect");
+        var val = sel.value;
+        var box = document.getElementById("detailsWrapper");
+        var gText = document.getElementById("guidanceText");
+        var gImg = document.getElementById("guidanceImage");
+
+        var allRooms = document.querySelectorAll(".room-box, .lift-container");
+        for (var i = 0; i < allRooms.length; i++) {
+            allRooms[i].classList.remove("room-active");
+        }
+
+        var allRoutes = document.querySelectorAll(".path-route");
+        for (var j = 0; j < allRoutes.length; j++) {
+            allRoutes[j].style.display = "none";
+            allRoutes[j].removeAttribute("d");
+        }
+
+        if (!val || !navData[val]) {
+            box.classList.remove("active");
+            return;
+        }
+
+        var item = navData[val];
+        changeFloor(item.view);
+
+        var rElem = document.getElementById("room-" + val);
+        if (rElem) {
+            rElem.classList.add("room-active");
+        }
+
+        var activeLine = document.getElementById("route-" + item.view);
+        if (activeLine) {
+            activeLine.setAttribute("d", item.path);
+            activeLine.style.display = "inline";
+        }
+
+        gText.innerText = item.instruction;
+        gImg.src = item.image;
+        box.classList.add("active");
+    }
+</script>
+
+</body>
+</html>
